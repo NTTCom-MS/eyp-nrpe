@@ -15,21 +15,23 @@ log_facility=daemon
 # number.  The file is only written if the NRPE daemon is started by the root
 # user and is running in standalone mode.
 
-pid_file=/var/run/nrpe/nrpe.pid
+pid_file=<%= scope.lookupvar('nrpe::params::pid_file') %>
 
 # PORT NUMBER
 # Port number we should wait for connections on.
 # NOTE: This must be a non-priviledged port (i.e. > 1024).
 # NOTE: This option is ignored if NRPE is running under either inetd or xinetd
 
-server_port=5666
+server_port=<%= @server_port %>
 
+<% if defined?(@server_address) -%>
 # SERVER ADDRESS
 # Address that nrpe should bind to in case there are more than one interface
 # and you do not want nrpe to bind on all interfaces.
 # NOTE: This option is ignored if NRPE is running under either inetd or xinetd
 
-#server_address=127.0.0.1
+server_address=<%= @server_address %>
+<% end -%>
 
 # NRPE USER
 # This determines the effective user that the NRPE daemon should run as.
@@ -37,7 +39,7 @@ server_port=5666
 #
 # NOTE: This option is ignored if NRPE is running under either inetd or xinetd
 
-nrpe_user=nrpe
+nrpe_user=<%= scope.lookupvar('nrpe::params::username') %>
 
 # NRPE GROUP
 # This determines the effective group that the NRPE daemon should run as.
@@ -45,7 +47,7 @@ nrpe_user=nrpe
 #
 # NOTE: This option is ignored if NRPE is running under either inetd or xinetd
 
-nrpe_group=nrpe
+nrpe_group=<%= scope.lookupvar('nrpe::params::group') %>
 
 
 
@@ -62,8 +64,7 @@ nrpe_group=nrpe
 #
 # NOTE: This option is ignored if NRPE is running under either inetd or xinetd
 
-allowed_hosts=127.0.0.1
-
+allowed_hosts=<%= @allowed_hosts.join(',') %>
 
 
 # COMMAND ARGUMENT PROCESSING
@@ -98,8 +99,7 @@ dont_blame_nrpe=<%= scope.function_bool2number([@dont_blame_nrpe]) %>
 
 allow_bash_command_substitution=<%= scope.function_bool2number([@allow_bash_command_substitution]) %>
 
-
-
+<% if defined?(@command_prefix) -%>
 # COMMAND PREFIX
 # This option allows you to prefix all commands with a user-defined string.
 # A space is automatically added between the specified prefix string and the
@@ -117,8 +117,8 @@ allow_bash_command_substitution=<%= scope.function_bool2number([@allow_bash_comm
 # without asking for a password.  If you do this, make sure you don't give
 # random users write access to that directory or its contents!
 
-# command_prefix=/usr/bin/sudo
-
+command_prefix=<%= @command_prefix %>
+<% end -%>
 
 
 # DEBUGGING OPTION
@@ -207,4 +207,4 @@ command[check_total_procs]=/usr/lib64/nagios/plugins/check_procs -w 150 -c 200
 # This directive allows you to include definitions from config files (with a
 # .cfg extension) in one or more directories (with recursion).
 
-include_dir=/etc/nrpe.d/
+include_dir=<%= scope.lookupvar('nrpe::params::nrpe_conf_dir') %>/
