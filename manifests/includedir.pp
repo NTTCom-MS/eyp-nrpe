@@ -11,7 +11,7 @@ define nrpe::includedir (
   Exec {
     path => '/bin:/sbin:/usr/bin:/usr/sbin',
   }
-  
+
   validate_absolute_path($dir)
 
   if($createdir)
