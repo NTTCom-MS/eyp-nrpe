@@ -24,10 +24,13 @@ class nrpe(
                             $install_plugins                 = true,
                             $allowed_hosts                   = [ '127.0.0.1' ],
                             $command_prefix                  = undef,
-                            $nrped_purge                     = true,
-                            $nrped_recurse                   = true,
+                            $nrpe_conf_purge                 = true,
+                            $nrpe_conf_recurse               = true,
                             $server_address                  = undef,
                             $server_port                     = '5666',
+                            $username                        = $nrpe::params::username_default,
+                            $group                           = $nrpe::params::group_default,
+                            $nrpe_conf_dir                   = $nrpe::params::nrpe_conf_dir_default,
                           ) inherits nrpe::params{
 
   validate_re($package_ensure, [ '^present$', '^installed$', '^absent$', '^purged$', '^held$', '^latest$' ], 'Not a supported package_ensure: present/absent/purged/held/latest')
