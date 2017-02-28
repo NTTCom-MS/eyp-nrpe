@@ -17,6 +17,7 @@ class nrpe::params {
       $group_default='nrpe'
       $sysconfig_file=undef
       $sysconfig_template=undef
+      $ppa_dont_blame=false
 
       case $::operatingsystemrelease
       {
@@ -32,7 +33,7 @@ class nrpe::params {
       $service_name='nagios-nrpe-server'
       $include_epel=false
       $package_name='nagios-nrpe-server'
-      $plugins_packages_default=[ 'nagios-plugins-basic' ]
+      $plugins_packages_default=[ 'nagios-plugins-basic', 'nagios-nrpe-plugin' ]
       $nrpe_conf_dir_default='/etc/nagios/nrpe.d'
       $username_default='nagios'
       $group_default='nagios'
@@ -45,8 +46,13 @@ class nrpe::params {
         {
           case $::operatingsystemrelease
           {
-            /^1[46].*$/:
+            /^14.*$/:
             {
+              $ppa_dont_blame=false
+            }
+            /^16.*$/:
+            {
+              $ppa_dont_blame=true
             }
             default: { fail("Unsupported Ubuntu version! - ${::operatingsystemrelease}")  }
           }
@@ -67,6 +73,7 @@ class nrpe::params {
       $group_default='nagios'
       $sysconfig_file=undef
       $sysconfig_template=undef
+      $ppa_dont_blame=false
 
       case $::operatingsystem
       {
